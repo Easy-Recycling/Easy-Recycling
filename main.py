@@ -1,139 +1,64 @@
-import sqlite3
-from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.snackbar import Snackbar
 from kivymd.app import MDApp
-from kivymd.uix.dialog import MDDialog
-from kivy.uix.screenmanager import ScreenManager, Screen
-from database import create_database, singup_test, insert_user, login_test
-from kivymd.uix.button import MDRaisedButton
-from kivy.properties import ObjectProperty
-from kivymd.uix.dialog import MDDialog
+from kivy.app import App
+from binsmapview import SelectBin
+from binmarker import BinMarker
+from binsmapview import BinsMapView
+import sqlite3
 
-conn = sqlite3.connect('UsersTry.db')
-c = conn.cursor()
-create_database()
+#todo - suicide
 
-#Window.size = (1040, 1426)
+class MainApp(MDApp):
+    latitude = 42.69
+    longitude = 23.34
 
-class LogInScreen(Screen):
-    pass
+    connection = None
+    cursor = None
+    def on_start(self):
+        self.connection = sqlite3.connect("bins.db")
+        self.cursor = self.connection.cursor()
 
+    def bin_pos(self):
+        bins_sum = []
+        sum = 0
+        app = App.get_running_app()
+        sql_statement = "SELECT * FROM bins"
+        app.cursor.execute(sql_statement)
+        bins = app.cursor.fetchall()
+        for bin in bins:
+            sum = bin[1] + bin[2]
+            bins_sum.append(sum)
 
-class ProfileScreen(Screen):
-    pass
+        self.calculate_closest(bins_sum)
 
-class SingUpScreen(Screen):
-    pass
+    def calculate_closest(self, bins_sum):
+        loc_x, loc_y = 42.712630, 23.259306
+        min = 0
+        location_sum = loc_x + loc_y
+        for i in range (0, 6):
+            distance = location_sum - bins_sum[i]
+            if distance < 0:
+                distance *= -1
 
-class InfoScreen(Screen):
-    pass
+            if i == 1:
+                min = distance
+                closest_bin = i
 
-
-sm = ScreenManager()
-sm.add_widget(LogInScreen(name='loginscreen'))
-sm.add_widget(ProfileScreen(name='profile'))
-sm.add_widget(SingUpScreen(name='singupscreen'))
-sm.add_widget(InfoScreen(name='infoscreen'))
-
-
-
-class AllHere(MDApp):
-    screen_manager = ObjectProperty()  # IMPORTANT!
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+            if distance < min:
+                min = distance
+                closest_bin = i
+        app = App.get_running_app()
+        sql_statement = "SELECT * FROM bins"
+        app.cursor.execute(sql_statement)
+        bins = app.cursor.fetchall()
+        i = 1
+        for bin in bins:
+            i+=1
+            if i == closest_bin:
+                self.SelectBin(bin)
 
 
     def build(self):
-        kinds_of_bins = ["Metal", "Rubber", "Plastic"]
-        menu_items = [{"text": f"{i}"} for i in kinds_of_bins]
-        self.menu = MDDropdownMenu(
-            items=menu_items,
-            width_mult=4,
-        )
-        self.menu.bind(on_release=self.menu_callback)
+        return
 
 
-    def callback(self, button):
-        self.menu.caller = button
-        self.menu.open()
-
-    def menu_callback(self, menu, item):
-        self.menu.dismiss()
-        Snackbar(text=item.text).open()
-
-
-    def sing_up(self):
-        username = self.root.get_screen("singupscreen").ids.username_text.text
-        password = self.root.get_screen("singupscreen").ids.password_text.text
-        email = self.root.get_screen("singupscreen").ids.email_text.text
-        result = singup_test(email)
-
-        if result == None and username != '' and password != '' and email != '':
-            insert_user(username, email, password)
-            conn.commit()
-            self.reset_sing_up()
-            MDApp.get_running_app().root.current = 'loginscreen'
-        else:
-            self.pop_up()
-
-    def log_in(self):
-        self.set_text_on_info()
-        password = self.root.get_screen("loginscreen").ids.password_text.text
-        email = self.root.get_screen("loginscreen").ids.email_text.text
-        result = login_test(email, password)
-        if result != None and password != '' and email != '':
-            #self.reset_log_in()
-            self.get_user()
-            MDApp.get_running_app().root.current = 'profile'
-        else:
-            self.pop_up()
-
-    def get_user(self):
-        email = self.root.get_screen("loginscreen").ids.email_text.text
-        user = singup_test(email)
-        return user
-
-    def get_rubbish_kind(self):
-        pass
-
-    def set_text_on_info(self):
-        user = self.get_user()
-        length = len(user[0])
-        kind_of_rubbish = 'rubber'
-        self.root.get_screen('infoscreen').ids.info_label.text = "Username: " + user[0] + "\nok"
-
-    def log_out(self):
-        self.reset_log_in()
-        MDApp.get_running_app().root.current = 'loginscreen'
-
-    def pop_up(self):
-        dialog = MDDialog(text="Incorrect login/sing up information, try again")
-        dialog.open()
-
-    #def set_screen(self):
-        #MDApp.get_running_app().root.current = 'profile'
-
-    def reset_sing_up(self):
-        self.root.get_screen("singupscreen").ids.username_text.text = ''
-        self.root.get_screen("singupscreen").ids.password_text.text = ''
-        self.root.get_screen("singupscreen").ids.email_text.text = ''
-
-    def reset_log_in(self):
-        self.root.get_screen("loginscreen").ids.password_text.text = ''
-        self.root.get_screen("loginscreen").ids.email_text.text = ''
-
-    def createButton(self):
-        print("button created")
-        x = 0.5
-        y = 0.6
-
-        btn = MDRaisedButton(text="New Button", pos_hint={'center_x': x, 'center_y': y})
-        self.root.ids.screenID.add_widget(btn)
-
-    #def new_window(self, *args):
-     #   btn = MDFlatButton(text="New group", size_hint_y=None, height=100)
-      #  self.root.add_widget(btn)
-
-
-AllHere().run()
+MainApp().run()
