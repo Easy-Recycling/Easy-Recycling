@@ -4,22 +4,30 @@
 <BinsMapView>:
     lat: app.latitude
     lon: app.longitude
-    zoom: 8
+    zoom: 12
+    double_tap_zoom: True
     on_zoom:
-        self.zoom = 8 if self.zoom < 8 else self.zoom
+        self.zoom = 12 if self.zoom < 12 else self.zoom
     on_lat:
         self.start_getting_bins_in_fov()
     on_lon:
         self.start_getting_bins_in_fov()
 
+
     MDFloatLayout:
         MDRaisedButton:
-
             text: "find closest bin"
             pos: root.width * 0.39, root.height * 0.1
-            size: root.width * 0.25, root.height * 0.07
-            md_bg_color: 102/255, 153/255, 255/255, 1
+            size: root.width * 0.26, root.height * 0.08
+            md_bg_color: 60/255, 60/255, 60/255, 0.8
             halign: 'center'
             on_press: app.bin_pos()
+
+        MDFloatingActionButton:
+            pos: root.width * 0.85, root.height * 0.9
+            icon: "exit-to-app"
+            md_bg_color: 60/255, 60/255, 60/255, 0.8
+            on_press: print("return")
+
 
 
