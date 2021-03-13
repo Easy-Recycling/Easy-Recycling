@@ -17,7 +17,7 @@ ScreenManager:
             size: 350, 460
             pos_hint: {"center_x":0.5,"center_y":0.5}
             elevation: 50
-            md_bg_color: [0/255, 0/255, 0/255, 0.1]
+            md_bg_color: [126/255, 203/255, 29/255, 0.5]
             padding: 20
             spacing: 30
             orientation: 'vertical'
@@ -112,6 +112,7 @@ ScreenManager:
                 font_size: 20
                 pos_hint: {"center_x":.5}
                 normal_color: 131/255, 200/255, 65/255, 0.5
+
             MDTextFieldRound:
                 id: email_text
                 hint_text: 'email'
@@ -133,11 +134,9 @@ ScreenManager:
                 color_activate: [1,1,1,1]
                 password: True
                 normal_color: 131/255, 200/255, 65/255, 0.5
+
             MDRoundFlatButton:
-                theme_text_color: "Custom"
-                text_color: 148/255, 148/255, 148/255, 1
                 text: 'Sing-up'
-                color: 131/255, 200/255, 65/255, 0.5
                 pos_hint: {"center_x":.5}
                 font_size: 20
                 #on_release: my_label.text = my_textinput.text
@@ -146,8 +145,6 @@ ScreenManager:
 
 
             MDRoundFlatButton:
-                theme_text_color: "Custom"
-                text_color: 148/255, 148/255, 148/255, 1
                 text: "Already have an account? Sing-in"
                 pos_hint: {"center_x":.5}
                 font_size: 15
@@ -160,21 +157,28 @@ ScreenManager:
 <ProfileScreen>
     name: 'profile'
 
-    MDBoxLayout:
-        orientation: "vertical"
-        spacing: 10
+    MDFloatLayout:
+
 
         MDToolbar:
-            theme_text_color: "Custom"
-            text_color: 148/255, 148/255, 148/255, 1
             title: "Easy-Recycling"
             left_action_items: [["menu", lambda x: app.callback(x)]]
+            right_action_items: [["dots-vertical", lambda x: app.callback(x)]]
+            title: "MDDropdownMenu"
+            md_bg_color: 126/255, 203/255, 29/255, 0.5
+            pos_hint: {"center_x":.5, "top":1}
 
+
+        MDRaisedButton:
+            text: "Menu"
+            pos_hint: {"center_x": .5, "bottom": 1}
+            on_release:
+                app.dropdown.open(self)
 
         MDFillRoundFlatButton:
             id: button_test
             text: "                                                            "
-            pos_hint: {"center_x":.5, "top":1}
+            pos_hint: {"center_x": .5, "bottom": 1}
             size_hint: (1, .2)
             md_bg_color: 126/255, 203/255, 29/255, 0.5
             halign: 'center'
@@ -183,7 +187,7 @@ ScreenManager:
         MDFillRoundFlatButton:
             id: button_test2
             text: "Test button"
-            pos_hint: {"center_x":.5, "top":1}
+            pos_hint: {"center_x": .5, "bottom": .5}
             size_hint: (1, .2)
             md_bg_color: 126/255, 203/255, 29/255, 0.5
             halign: 'center'
@@ -191,3 +195,7 @@ ScreenManager:
         MDLabel:
             text: ""
             halign: "center"
+
+
+
+
