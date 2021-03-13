@@ -6,6 +6,10 @@ from database import create_database, singup_test, insert_user, login_test
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
+from kivymd.uix.menu import MDDropdownMenu, RightContent
+from kivymd.uix.snackbar import Snackbar
+
+
 
 conn = sqlite3.connect('UsersTry.db')
 c = conn.cursor()
@@ -23,6 +27,8 @@ class ProfileScreen(Screen):
 class SingUpScreen(Screen):
     pass
 
+class RightContentCls(RightContent):
+    pass
 
 
 sm = ScreenManager()
@@ -78,20 +84,20 @@ class AllHere(MDApp):
         self.root.get_screen("loginscreen").ids.password_text.text = ''
         self.root.get_screen("loginscreen").ids.email_text.text = ''
 
-    def on_start(self):
-        # Create dropdown menu
-        self.dropdown = MDDropdownMenu(width_mult=4)
+    def build(self):
+        menu_items = [{"text": f"Item {i}"} for i in range(5)]
+        self.menu = MDDropdownMenu(
+            items=menu_items,
+            width_mult=4,
+        )
+        self.menu.bind(on_release=self.menu_callback)
 
-        # Add items to the menu
-        for i in range(4):
-            self.dropdown.items.append(
-                {"viewclass": "MDMenuItem",
-                 "text": "Map" + str(i),
-                 "callback": self.map_callback}
-            )
+    def callback(self, button):
+        self.menu.caller = button
+        self.menu.open()
 
-    def map_callback(self, text_of_the_option):
-        print(text_of_the_option)
-
+    def menu_callback(self, menu, item):
+        self.menu.dismiss()
+        Snackbar(text=item.text).open()
 
 AllHere().run()
