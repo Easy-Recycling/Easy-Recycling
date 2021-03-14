@@ -1,7 +1,19 @@
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+#: import SlideTransition kivy.uix.screenmanager.SlideTransition
 ScreenManager:
     LogInScreen:
     SingUpScreen:
     ProfileScreen:
+    InfoScreen:
+    MenuScreen:
+    PointsScreen:
+    MenuScreenMain:
+    SpecialLogInScreen:
+    SpecialSingUpScreen:
+    MapScreen1:
+    MapScreen2:
+    SpecialScreen:
+
 <LogInScreen>:
     name: 'loginscreen'
 
@@ -17,7 +29,7 @@ ScreenManager:
             size: 350, 460
             pos_hint: {"center_x":0.5,"center_y":0.5}
             elevation: 50
-            md_bg_color: [126/255, 203/255, 29/255, 0.5]
+            md_bg_color: [131/255, 200/255, 65/255, 0.3]
             padding: 20
             spacing: 30
             orientation: 'vertical'
@@ -29,7 +41,7 @@ ScreenManager:
                 halign: "center"
                 size_hint_y: None
                 height: self.texture_size[1]
-                padding_y: 15
+
 
 
             MDTextFieldRound:
@@ -52,32 +64,47 @@ ScreenManager:
                 font_size: 20
                 pos_hint: {"center_x":.5}
                 color_activate: [1,1,1,1]
-                password: True
                 normal_color: 1, 1, 1, 1
+                password: True
 
             MDFillRoundFlatButton:
                 theme_text_color: "Custom"
-                text_color: 148/255, 148/255, 148/255, 1
+                text_color: 1/255, 1/255, 1/255, 1
                 md_bg_color: 1, 1, 1, 1
-                text: 'Sing-in'
+                text: 'Sign-in'
                 pos_hint: {"center_x":.5}
                 font_size: 20
                 #on_release: my_label.text = my_textinput.text
                 #on_release: root.manager.current = 'profile'
-                on_release: app.log_in()
+                on_release:
+                    root.manager.transition.direction = "left"
+                    app.log_in()
+
 
             MDFillRoundFlatButton
                 theme_text_color: "Custom"
-                text_color: 148/255, 148/255, 148/255, 1
+                text_color: 1/255, 1/255, 1/255, 1
                 md_bg_color: 1, 1, 1, 1
-                text: "Don't have an account? Sing-up"
+                text: "Don't have an account? Sign-up"
                 pos_hint: {"center_x":.5}
                 font_size: 18
-                on_release: root.manager.current = 'singupscreen'
+                on_release:
+                    root.manager.current = 'singupscreen'
+                    root.manager.transition.direction = 'down'
+
+            MDFillRoundFlatButton
+                id: button1
+                theme_text_color: "Custom"
+                text_color: 1/255, 1/255, 1/255, 1
+                md_bg_color: 1, 1, 1, 1
+                text: "Transport Log-in"
+                pos_hint: {"center_x":.5}
+                font_size: 18
+                on_release: root.manager.current = 'specialloginscreen'
 
             Widget:
                 size_hint_y: None
-                height: 25
+                height: -15
 
 <SingUpScreen>:
     name: 'singupscreen'
@@ -89,18 +116,18 @@ ScreenManager:
             size: 420, 600
             pos_hint: {"center_x":.5,"center_y":.5}
             elevation: 15
-            md_bg_color: [255/255, 255/255, 255/255, 1]
+            text_color: 0, 0, 0, 0
+            md_bg_color: 1, 1, 1, 1
             padding: 20
             spacing: 30
             orientation: 'vertical'
             MDLabel:
-                text: 'Sing-up'
+                text: 'Sign-up'
                 font_style: 'Button'
                 font_size: 45
                 halign: "center"
                 size_hint_y: None
                 height: self.texture_size[1]
-                padding_y: 15
 
 
             MDTextFieldRound:
@@ -131,12 +158,12 @@ ScreenManager:
                 width: 220
                 font_size: 20
                 pos_hint: {"center_x":.5}
-                color_activate: [1,1,1,1]
-                password: True
                 normal_color: 131/255, 200/255, 65/255, 0.5
+                password: True
 
             MDRoundFlatButton:
-                text: 'Sing-up'
+                text: 'Sign-up'
+                text_color: [1/255, 1/255, 1/255, 1]
                 pos_hint: {"center_x":.5}
                 font_size: 20
                 #on_release: my_label.text = my_textinput.text
@@ -146,55 +173,436 @@ ScreenManager:
 
             MDRoundFlatButton:
                 text: "Already have an account? Sing-in"
+                text_color: [1/255, 1/255, 1/255, 1]
                 pos_hint: {"center_x":.5}
                 font_size: 15
                 on_release: root.manager.current = 'loginscreen'
 
+
+
+            MDRoundFlatButton:
+                text: "Transport Sign-up"
+                text_color: [1/255, 1/255, 1/255, 1]
+                pos_hint: {"center_x":.5}
+                font_size: 15
+                on_release: root.manager.current = 'specialsingupscreen'
+
+
             Widget:
                 size_hint_y: None
-                height: 60
+                height: 30
 
-<ProfileScreen>
+<ProfileScreen>:
     name: 'profile'
 
     MDFloatLayout:
 
-
         MDToolbar:
+            pos_hint: {"center_x":.5, "top":1}
             title: "Easy-Recycling"
             left_action_items: [["menu", lambda x: app.callback(x)]]
-            right_action_items: [["dots-vertical", lambda x: app.callback(x)]]
-            title: "MDDropdownMenu"
-            md_bg_color: 126/255, 203/255, 29/255, 0.5
-            pos_hint: {"center_x":.5, "top":1}
+            md_bg_color: 121/255, 180/255, 75/255, 1
 
 
         MDRaisedButton:
-            text: "Menu"
-            pos_hint: {"center_x": .5, "bottom": 1}
-            on_release:
-                app.dropdown.open(self)
-
-        MDFillRoundFlatButton:
-            id: button_test
-            text: "                                                            "
-            pos_hint: {"center_x": .5, "bottom": 1}
-            size_hint: (1, .2)
-            md_bg_color: 126/255, 203/255, 29/255, 0.5
-            halign: 'center'
-            multiline: False
-
-        MDFillRoundFlatButton:
             id: button_test2
-            text: "Test button"
-            pos_hint: {"center_x": .5, "bottom": .5}
-            size_hint: (1, .2)
-            md_bg_color: 126/255, 203/255, 29/255, 0.5
+            text: "Throw Away"
+            pos_hint: {"center_x":.855, "top":0.867}
+            size_hint: (0.25, .13)
+            md_bg_color: 121/255, 180/255, 75/255, 1
             halign: 'center'
+            #on_release: app.new_window()
+            on_release:
+                root.manager.current = 'menuscreen'
+
 
         MDLabel:
-            text: ""
-            halign: "center"
+            text: "You haven't thrown away any garbage yet."
+            color: 1,1,1,1
+            size_hint: 0.65, 0.13
+            pos_hint: {"center_x":.355, "top":0.867}
+            halign: 'center'
+            canvas.before:
+                Color:
+                    rgba: 121/255, 180/255, 75/255, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+
+<InfoScreen>:
+    name: 'infoscreen'
+
+    MDFloatLayout:
+
+        MDToolbar:
+            pos_hint: {"center_x":.5, "top":1}
+            title: "Easy-Recycling"
+            left_action_items: [["menu", lambda x: app.callback(x)]]
+
+        MDRaisedButton:
+            text: "this is info screen"
+            pos_hint: {"center_x":.855, "top":0.867}
+            size_hint: (0.25, .65)
+            md_bg_color: 102/255, 153/255, 255/255, 1
+            halign: 'center'
+            #on_release: app.new_window()
+            on_release: root.manager.current = 'points'
+
+        MDLabel:
+            id: info_label
+            text: "saddas asf asfsdafasdfasdf asdfasdfasfasdfas asdf afdsa asd das asdsadfsdaf\n sadadafad"
+            size_hint: 0.65, 0.65
+            pos_hint: {"center_x":.355, "top":0.867}
+            halign: 'center'
+            canvas.before:
+                Color:
+                    rgba: 102/255, 153/255, 255/255, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+<MenuScreen>:
+    name: 'menuscreen'
+    MDFloatLayout:
+
+        MDToolbar:
+            pos_hint: {"center_x":.5, "top":1}
+            title: "Easy-Recycling"
+            left_action_items: [["menu", lambda x: app.callback(x)]]
+            md_bg_color: 121/255, 180/255, 75/255, 1
+
+        MDRaisedButton:
+
+            text: "Rubber"
+            pos_hint: {"center_x":.5, "top":.92}
+            size_hint: (1, .13)
+            md_bg_color: 117/255, 205/255, 255/255, 1
+            text_color: [1/255, 1/255, 1/255, 1]
+            halign: 'center'
+            font_size: 23
+            on_release:
+                root.manager.current = 'MapScreen1'
+                app.safe_kind_of_garbage('Rubber')
+
+        MDRaisedButton:
+            text: "Batteries"
+            font_size: 23
+            text_color: [1/255, 1/255, 1/255, 1]
+            pos_hint: {"center_x":.5, "top":0.81}
+            size_hint: (1, .13)
+            md_bg_color: 117/255, 117/255, 117/255, 1
+            halign: 'center'
+            on_release:
+                root.manager.current = 'MapScreen1'
+                app.safe_kind_of_garbage('Batteries')
+
+        MDRaisedButton:
+            text: "Plastic"
+            font_size: 23
+            text_color: [1/255, 1/255, 1/255, 1]
+            pos_hint: {"center_x":.5, "top":0.7}
+            size_hint: (1, .13)
+            md_bg_color: 255/255, 228/255, 56/255, 1
+            halign: 'center'
+            on_release:
+                root.manager.current = 'MapScreen1'
+                app.safe_kind_of_garbage('Plastic')
+
+        MDRaisedButton:
+            text: "Glass"
+            font_size: 23
+            text_color: [1/255, 1/255, 1/255, 1]
+            pos_hint: {"center_x":.5, "top":0.59}
+            size_hint: (1, .13)
+            md_bg_color: 131/255, 200/255, 65/255, 1
+            halign: 'center'
+            on_release:
+                root.manager.current = 'MapScreen1'
+                app.safe_kind_of_garbage('Glass')
+
+
+<PointsScreen>:
+    name: 'points'
+    MDFloatLayout:
+
+        MDToolbar:
+            pos_hint: {"center_x":.5, "top":1}
+            title: "Easy-Recycling"
+            left_action_items: [["menu", lambda x: app.callback(x)]]
+            md_bg_color: 121/255, 180/255, 75/255, 1
+
+        MDLabel:
+            id: info_label5
+            text: "this is points"
+            size_hint: 0.9, 0.25
+            pos_hint: {"center_x":.5, "top":0.867}
+            halign: 'center'
+            color: 255/255, 255/255, 255/255, 1
+            canvas.before:
+                Color:
+                    rgba: 121/255, 180/255, 75/255, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+<MenuScreenMain>:
+    name: 'menuscreenmain'
+    MDFloatLayout:
+
+        MDToolbar:
+            pos_hint: {"center_x":.5, "top":1}
+            title: "Easy-Recycling"
+            left_action_items: [["menu", lambda x: app.callback(x)]]
+            md_bg_color: 121/255, 180/255, 75/255, 1
+
+        MDRaisedButton:
+            text: "See points"
+            pos_hint: {"center_x":.855, "top":0.867}
+            size_hint: (0.25, .13)
+            md_bg_color: 131/255, 200/255, 65/255, 1
+            text_color: 255/255, 255/255, 255/255, 1
+            halign: 'center'
+            font_size: 16
+            on_release: app.see_points()
+
+        MDLabel:
+            id: info_label3
+            text: "saddas asf asfsdafasdfasdf asdfasdfasfasdfas asdf afdsa asd das asdsadfsdaf\n sadadafad"
+            size_hint: 0.65, 0.13
+            pos_hint: {"center_x":.355, "top":0.867}
+            halign: 'center'
+            text_color: 255/255, 255/255, 255/255, 1
+            color: 255/255, 255/255, 255/255, 1
+            canvas.before:
+                Color:
+                    rgba: 131/255, 200/255, 65/255, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+<SpecialSingUpScreen>:
+    name: 'specialsingupscreen'
+    MDScreen:
+        md_bg_color: [131/255, 200/255, 65/255, 1]
+
+        MDCard:
+            size_hint: None, None
+            size: 420, 600
+            pos_hint: {"center_x":.5,"center_y":.5}
+            elevation: 15
+            text_color: 0, 0, 0, 0
+            md_bg_color: 1, 1, 1, 1
+            padding: 20
+            spacing: 30
+            orientation: 'vertical'
+            MDLabel:
+                text: 'Transport Sing-up'
+                font_style: 'Button'
+                font_size: 45
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+
+            MDTextFieldRound:
+                id: username_text
+                hint_text: 'username'
+                icon_right: 'account'
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x":.5}
+                normal_color: 131/255, 200/255, 65/255, 0.5
+
+            MDTextFieldRound:
+                id: email_text
+                hint_text: 'email'
+                icon_right: 'email'
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x":.5}
+                normal_color: 131/255, 200/255, 65/255, 0.5
+
+            MDTextFieldRound:
+                id: password_text
+                hint_text: 'password'
+                icon_right: 'eye-off'
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x":.5}
+                normal_color: 131/255, 200/255, 65/255, 0.5
+                password: True
+            MDRoundFlatButton:
+                text: 'Sing-up'
+                text_color: [1/255, 1/255, 1/255, 1]
+                pos_hint: {"center_x":.5}
+                font_size: 20
+                #on_release: my_label.text = my_textinput.text
+                #on_release: root.manager.current = 'profile'
+                on_release: app.special_singup()
+
+            MDRoundFlatButton:
+                text: "Already have an account? Sing-in"
+                text_color: [1/255, 1/255, 1/255, 1]
+                pos_hint: {"center_x":.5}
+                font_size: 15
+                on_release: root.manager.current = 'specialloginscreen'
+
+            MDRoundFlatButton:
+                text: "Normal Sing-up"
+                text_color: [1/255, 1/255, 1/255, 1]
+                pos_hint: {"center_x":.5}
+                font_size: 15
+                on_release: root.manager.current = 'singupscreen'
+
+            Widget:
+                size_hint_y: None
+                height: 0
+
+<SpecialLogInScreen>:
+    name: 'specialloginscreen'
+    MDScreen:
+        Image:
+            source: 'Images/recycling.jpg'
+            allow_stretch: True
+            keep_ratio: False
+            size_hint: 1, 1
+
+        MDCard:
+            size_hint: None, None
+            size: 350, 460
+            pos_hint: {"center_x":0.5,"center_y":0.5}
+            elevation: 50
+            md_bg_color: [131/255, 200/255, 65/255, 0.3]
+            padding: 20
+            spacing: 30
+            orientation: 'vertical'
+            MDLabel:
+                text: 'Transport Log-in'
+                color: 1, 1, 1, 1
+                font_style: 'Button'
+                font_size: 32
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+
+
+            MDTextFieldRound:
+                id: email_text1
+                hint_text: 'email'
+                icon_right: 'email'
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x":.5}
+                color_activate: [1,1,1,1]
+                normal_color: 1, 1, 1, 1
+
+            MDTextFieldRound:
+                id: password_text1
+                hint_text: 'password'
+                icon_right: 'eye-off'
+                size_hint_x: None
+                width: 220
+                font_size: 20
+                pos_hint: {"center_x":.5}
+                color_activate: [1,1,1,1]
+                normal_color: 1, 1, 1, 1
+                password: True
+
+            MDFillRoundFlatButton:
+                theme_text_color: "Custom"
+                text_color: [1/255, 1/255, 1/255, 1]
+                md_bg_color: 1, 1, 1, 1
+                text: 'Sing-in'
+                pos_hint: {"center_x":.5}
+                font_size: 20
+                #on_release: my_label.text = my_textinput.text
+                #on_release: root.manager.current = 'profile'
+                on_release: app.special_login()
+
+            MDFillRoundFlatButton
+                theme_text_color: "Custom"
+                text_color: [1/255, 1/255, 1/255, 1]
+                md_bg_color: 1, 1, 1, 1
+                text: "Don't have an account? Sing-up"
+                pos_hint: {"center_x":.5}
+                font_size: 18
+                on_release: root.manager.current = 'specialsingupscreen'
+
+            MDFillRoundFlatButton
+                theme_text_color: "Custom"
+                text_color: [1/255, 1/255, 1/255, 1]
+                md_bg_color: 1, 1, 1, 1
+                text: "Normal Log-in"
+                pos_hint: {"center_x":.5}
+                font_size: 18
+                on_release: root.manager.current = 'loginscreen'
+
+            Widget:
+                size_hint_y: None
+                height: -5
+
+<MapScreen1>:
+    transition: FadeTransition()
+    name: 'MapScreen1'
+    MDFloatLayout:
+    MDScreen:
+        Image:
+            source: '3.png'
+            allow_stretch: True
+            keep_ratio: False
+            size_hint: 1, 1
+
+        MDFillRoundFlatButton
+            theme_text_color: "Custom"
+            text_color: 1, 1, 1, 1
+            md_bg_color: 102/255, 153/255, 255/255, .6
+            text: "Select Nearest"
+            pos_hint: {"center_x":.5}
+            font_size: 18
+            on_release:
+                app.root.transition = FadeTransition(duration=1.2)
+                root.manager.current = 'MapScreen2'
+
+<MapScreen2>:
+    name: 'MapScreen2'
+    MDFloatLayout:
+    MDScreen:
+        Image:
+            source: '5.png'
+            allow_stretch: True
+            keep_ratio: False
+            size_hint: 1, 1
+
+        MDFillRoundFlatButton
+            theme_text_color: "Custom"
+            text_color: 1, 1, 1, 1
+            md_bg_color: 102/255, 153/255, 255/255, .6
+            text: "Select"
+            pos_hint: {"center_x":.5}
+            font_size: 18
+            on_release:
+                app.root.transition = SlideTransition(direction="up")
+                app.bin_selected()
+
+
+<SpecialScreen>:
+    name: 'specialscreen'
+
+    MDFloatLayout:
+        MDRaisedButton:
+            text: "Collect Nearest"
+            pos_hint: {"center_x":.5, "top":0.6}
+            size_hint: (1, .2)
+            md_bg_color: 121/255, 180/255, 75/255, 1
+            halign: 'center'
+            on_release:
+                app.garbage_is_collected()
 
 
 
